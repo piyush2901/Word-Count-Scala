@@ -1,0 +1,24 @@
+scala> val text = sc.textFile("C:/Users/Lotus/Desktop/data.txt")
+text: org.apache.spark.rdd.RDD[String] = C:/Users/Lotus/Desktop/data.txt MapPartitionsRDD[3] at textFile at <console>:24
+
+scala> text.collect ;
+res3: Array[String] = Array(Hello, Hi, Hello, hi, good, morning, good, day, bye, hello, Hello, Hi)
+
+scala> val counts = text.flatMap(line => line.split(" "))
+counts: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[4] at flatMap at <console>:25
+
+scala> counts.collect
+res4: Array[String] = Array(Hello, Hi, Hello, hi, good, morning, good, day, bye, hello, Hello, Hi)
+
+scala> val mapf = counts.map(word => (word,1))
+mapf: org.apache.spark.rdd.RDD[(String, Int)] = MapPartitionsRDD[5] at map at <console>:25
+
+scala> mapf.collect
+res5: Array[(String, Int)] = Array((Hello,1), (Hi,1), (Hello,1), (hi,1), (good,1), (morning,1), (good,1), (day,1), (bye,1), (hello,1), (Hello,1), (Hi,1))
+
+scala> val reducef = mapf.reduceByKey(_+_);
+reducef: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[6] at reduceByKey at <console>:25
+
+scala> reducef.collect
+res6: Array[(String, Int)] = Array((Hello,3), (day,1), (hello,1), (bye,1), (morning,1), (hi,1), (good,2), (Hi,2))
+
